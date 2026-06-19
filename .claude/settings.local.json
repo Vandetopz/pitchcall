@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Start-Process powershell -ArgumentList '-NoExit', '-Command', 'cd \"C:\\\\Users\\\\Kondio\\\\Desktop\\\\pitchcall\"; npm run dev')"
+    ]
+  }
+}

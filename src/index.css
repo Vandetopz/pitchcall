@@ -1,0 +1,38 @@
+:root {
+  --pitch: #05110D;
+  --pitch-2: #0E2A23;
+  --card: #12352C;
+  --card-2: #164134;
+  --chalk: #EAF2EC;
+  --chalk-dim: #8FA99B;
+  --gold: #F5C451;
+  --mint: #5EEAD4;
+  --coral: #FF6B5C;
+  --line: rgba(234,242,236,.10);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #05110D;
+  font-family: 'Inter', sans-serif;
+  color: #EAF2EC;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 412px;
+  min-height: 100vh;
+  position: relative;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(245,196,81,.10) 0%, transparent 60%),
+    #05110D;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
