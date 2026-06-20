@@ -21,6 +21,7 @@ export default function App() {
     const SUPPORTED = ['EN', 'BG', 'ES', 'PT', 'DE', 'FR', 'TR', 'IT', 'RU', 'PL', 'ID']
     return SUPPORTED.includes(tgCode) ? tgCode : 'EN'
   })
+  const [selectedLeague, setSelectedLeague] = useState(null)
   const [captain, setCaptain] = useState(null)
   const [submitted, setSubmitted] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
@@ -30,17 +31,27 @@ export default function App() {
   const t = I18N[lang]
 
   const { user, profile, loading: userLoading } = useUser()
-  const { fixtures } = useFixtures()
-  // profile.id (DB integer PK) is the FK used in predictions, NOT user.id (telegram_id)
+  const { fixtures, allLeagues } = useFixtures(selectedLeague)
   const { predictions, savePrediction, saveCaptain, loading: predsLoading } = usePredictions(profile?.id)
   const { leaderboard } = useLeaderboard()
   const { streak } = useStreak(profile?.id)
 
-  // Derive allPicked here so both useEffect and PredictScreen share the same value
   const picksMap = Object.fromEntries(predictions.map(p => [p.fixture_id, p.pick]))
   const allPicked = fixtures.length > 0 && fixtures.every(f => picksMap[f.id])
 
-  // Once predictions load from DB, restore captain and submitted state
+  // Auto-select the league with the nearest upcoming match (first in allLeagues)
+  useEffect(() => {
+    if (!selectedLeague && allLeagues.length > 0) {
+      setSelectedLeague(allLeagues[0])
+    }
+  }, [allLeagues, selectedLeague])
+
+  // Reset submitted when switching leagues (will re-lock if all picks exist)
+  useEffect(() => {
+    setSubmitted(false)
+  }, [selectedLeague])
+
+  // Restore captain from DB on first predictions load
   useEffect(() => {
     if (predsLoading) return
     const captainPred = predictions.find(p => p.is_captain)
@@ -63,13 +74,18 @@ export default function App() {
 
   async function handleCaptain(fixtureId) {
     const newCaptain = captain === fixtureId ? null : fixtureId
-    setCaptain(newCaptain)        // immediate UI response
-    await saveCaptain(newCaptain) // persist to DB
+    setCaptain(newCaptain)
+    await saveCaptain(newCaptain)
   }
 
   function handleSubmit() {
     setSubmitted(true)
     showToast(t.toastSub)
+  }
+
+  function handleLeagueChange(league) {
+    setSelectedLeague(league)
+    setCaptain(null) // captain is per-round; reset visual until predictions reload
   }
 
   if (userLoading) {
@@ -91,6 +107,9 @@ export default function App() {
         onSubmit={handleSubmit}
         lang={t}
         submitted={submitted}
+        allLeagues={allLeagues}
+        selectedLeague={selectedLeague}
+        onLeagueChange={handleLeagueChange}
       />
     ),
     leaderboard: (

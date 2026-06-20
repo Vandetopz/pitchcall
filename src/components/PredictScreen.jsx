@@ -1,12 +1,23 @@
 import GameweekBanner from './GameweekBanner'
 import FixtureCard from './FixtureCard'
+import LeagueSelector from './LeagueSelector'
 
-export default function PredictScreen({ fixtures, predictions, captain, onPick, onCaptain, onSubmit, lang, submitted }) {
+export default function PredictScreen({
+  fixtures, predictions, captain,
+  onPick, onCaptain, onSubmit, lang, submitted,
+  allLeagues, selectedLeague, onLeagueChange,
+}) {
   const picksMap = Object.fromEntries(predictions.map(p => [p.fixture_id, p.pick]))
   const allPicked = fixtures.length > 0 && fixtures.every(f => picksMap[f.id])
 
   return (
     <div style={{ paddingBottom: 90 }}>
+      <LeagueSelector
+        leagues={allLeagues}
+        selected={selectedLeague}
+        onChange={onLeagueChange}
+      />
+
       <GameweekBanner fixtures={fixtures} lang={lang} />
 
       {fixtures.map(f => (
