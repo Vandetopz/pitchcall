@@ -16,7 +16,11 @@ import './index.css'
 
 export default function App() {
   const [screen, setScreen] = useState('predict')
-  const [lang, setLang] = useState('EN')
+  const [lang, setLang] = useState(() => {
+    const tgCode = window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code?.toUpperCase()
+    const SUPPORTED = ['EN', 'BG', 'ES', 'PT', 'DE', 'FR', 'TR', 'IT', 'RU', 'PL', 'ID']
+    return SUPPORTED.includes(tgCode) ? tgCode : 'EN'
+  })
   const [captain, setCaptain] = useState(null)
   const [submitted, setSubmitted] = useState(false)
   const [subscribed, setSubscribed] = useState(false)

@@ -6,6 +6,10 @@ const LANGS = [
   { code: 'DE', name: 'Deutsch' },
   { code: 'FR', name: 'Français' },
   { code: 'TR', name: 'Türkçe' },
+  { code: 'IT', name: 'Italiano' },
+  { code: 'RU', name: 'Русский' },
+  { code: 'PL', name: 'Polski' },
+  { code: 'ID', name: 'Indonesia' },
 ]
 
 export default function LanguageSheet({ open, currentLang, onSelect, onClose }) {
@@ -26,6 +30,8 @@ export default function LanguageSheet({ open, currentLang, onSelect, onClose }) 
         padding: 8,
         zIndex: 101,
         minWidth: 186,
+        maxHeight: '70vh',
+        overflowY: 'auto',
       }}>
         {LANGS.map(l => (
           <button
