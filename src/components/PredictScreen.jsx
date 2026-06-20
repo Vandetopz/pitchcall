@@ -37,11 +37,11 @@ export default function PredictScreen({ fixtures, predictions, captain, onPick, 
               width: '100%',
               padding: '15px',
               background: submitted
-                ? 'rgba(255,255,255,.06)'
+                ? 'var(--mint)'
                 : allPicked
                   ? 'linear-gradient(135deg, #F5C451, #e0a93a)'
                   : 'rgba(255,255,255,.06)',
-              color: submitted || !allPicked ? '#8FA99B' : '#05110D',
+              color: submitted || allPicked ? '#05110D' : '#8FA99B',
               border: 'none',
               borderRadius: 15,
               fontFamily: 'Oswald',
@@ -49,7 +49,7 @@ export default function PredictScreen({ fixtures, predictions, captain, onPick, 
               fontWeight: 700,
               letterSpacing: 1.5,
               textTransform: 'uppercase',
-              cursor: allPicked && !submitted ? 'pointer' : 'not-allowed',
+              cursor: submitted ? 'default' : allPicked ? 'pointer' : 'not-allowed',
               opacity: !allPicked && !submitted ? 0.4 : 1,
               transition: 'all 0.2s',
             }}

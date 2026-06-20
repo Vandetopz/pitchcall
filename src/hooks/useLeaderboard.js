@@ -10,6 +10,7 @@ export function useLeaderboard() {
       const { data } = await supabase
         .from('leaderboard')
         .select('*')
+        .order('total_points', { ascending: false })
         .limit(50)
       if (data) setLeaderboard(data)
       setLoading(false)

@@ -18,7 +18,7 @@ export function usePredictions(userId) {
     fetchPredictions()
   }, [userId])
 
-  async function savePrediction(fixture_id, pick, is_captain) {
+  async function savePrediction(fixture_id, pick, is_captain = false) {
     const { data } = await supabase
       .from('predictions')
       .upsert(
@@ -40,5 +40,32 @@ export function usePredictions(userId) {
     }
   }
 
-  return { predictions, savePrediction, loading }
+  async function saveCaptain(newFixtureId) {
+    // Clear any existing captain for this user
+    await supabase
+      .from('predictions')
+      .update({ is_captain: false })
+      .eq('user_id', userId)
+      .eq('is_captain', true)
+
+    // Set captain on the new fixture only if it already has a pick saved
+    if (newFixtureId) {
+      const hasPick = predictions.find(p => p.fixture_id === newFixtureId)
+      if (hasPick) {
+        await supabase
+          .from('predictions')
+          .update({ is_captain: true })
+          .eq('user_id', userId)
+          .eq('fixture_id', newFixtureId)
+      }
+    }
+
+    // Optimistic local update — no flicker
+    setPredictions(prev => prev.map(p => ({
+      ...p,
+      is_captain: p.fixture_id === newFixtureId,
+    })))
+  }
+
+  return { predictions, savePrediction, saveCaptain, loading }
 }

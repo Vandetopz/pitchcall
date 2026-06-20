@@ -12,7 +12,7 @@ export function useStreak(userId) {
         .from('streaks')
         .select('*')
         .eq('user_id', userId)
-        .single()
+        .maybeSingle()
       if (data) setStreak(data)
       setLoading(false)
     }

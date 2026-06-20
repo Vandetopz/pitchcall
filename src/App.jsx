@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { I18N } from './i18n/translations'
 import { useUser } from './hooks/useUser'
 import { useFixtures } from './hooks/useFixtures'
@@ -27,9 +27,26 @@ export default function App() {
 
   const { user, profile, loading: userLoading } = useUser()
   const { fixtures } = useFixtures()
-  const { predictions, savePrediction } = usePredictions(user?.id)
+  // profile.id (DB integer PK) is the FK used in predictions, NOT user.id (telegram_id)
+  const { predictions, savePrediction, saveCaptain, loading: predsLoading } = usePredictions(profile?.id)
   const { leaderboard } = useLeaderboard()
-  const { streak } = useStreak(user?.id)
+  const { streak } = useStreak(profile?.id)
+
+  // Derive allPicked here so both useEffect and PredictScreen share the same value
+  const picksMap = Object.fromEntries(predictions.map(p => [p.fixture_id, p.pick]))
+  const allPicked = fixtures.length > 0 && fixtures.every(f => picksMap[f.id])
+
+  // Once predictions load from DB, restore captain and submitted state
+  useEffect(() => {
+    if (predsLoading) return
+    const captainPred = predictions.find(p => p.is_captain)
+    if (captainPred) setCaptain(captainPred.fixture_id)
+  }, [predsLoading]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-lock when returning to a fully-predicted gameweek
+  useEffect(() => {
+    if (allPicked) setSubmitted(true)
+  }, [allPicked])
 
   function showToast(msg) {
     setToast(msg)
@@ -38,11 +55,12 @@ export default function App() {
 
   async function handlePick(fixtureId, pick) {
     await savePrediction(fixtureId, pick, captain === fixtureId)
-    showToast(t.toastPick)
   }
 
-  function handleCaptain(fixtureId) {
-    setCaptain(prev => prev === fixtureId ? null : fixtureId)
+  async function handleCaptain(fixtureId) {
+    const newCaptain = captain === fixtureId ? null : fixtureId
+    setCaptain(newCaptain)        // immediate UI response
+    await saveCaptain(newCaptain) // persist to DB
   }
 
   function handleSubmit() {
@@ -74,7 +92,7 @@ export default function App() {
     leaderboard: (
       <LeaderboardScreen
         leaderboard={leaderboard}
-        currentUserId={user?.id}
+        currentUserId={profile?.id}
         lang={t}
       />
     ),
@@ -83,7 +101,7 @@ export default function App() {
         profile={profile}
         streak={streak}
         leaderboard={leaderboard}
-        currentUserId={user?.id}
+        currentUserId={profile?.id}
         lang={t}
       />
     ),
