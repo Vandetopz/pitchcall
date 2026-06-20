@@ -7,7 +7,14 @@ export function useUser() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user ?? {
+    // Tell Telegram the app is ready and expand to full height
+    const tg = window.Telegram?.WebApp
+    if (tg) {
+      tg.ready()
+      tg.expand()
+    }
+
+    const tgUser = tg?.initDataUnsafe?.user ?? {
       id: 99999,
       username: 'TestUser',
       first_name: 'Test',
@@ -29,12 +36,12 @@ export function useUser() {
         .single()
 
       if (!error && data) {
-        // Fetch aggregated stats — leaderboard joins predictions by profiles.id
+        // maybeSingle — new profiles may not appear in leaderboard yet
         const { data: lb } = await supabase
           .from('leaderboard')
           .select('total_points, predictions_made, correct_predictions')
           .eq('user_id', data.id)
-          .single()
+          .maybeSingle()
 
         const hit_rate =
           lb?.predictions_made > 0
