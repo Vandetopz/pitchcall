@@ -2,6 +2,8 @@ export const I18N = {
   EN: {
     gwEye: 'GW', gwTitle: 'Gameweek', deadline: 'Deadline', seasonProg: 'Season Progress',
     gwClosed: 'GW CLOSED',
+    tabLive: 'LIVE', tabToday: 'TODAY', tabTomorrow: 'TOMORROW', tabLeagues: 'LEAGUES',
+    noLive: 'No live matches right now',
     todayFix: "Today's Fixtures", submit: 'Lock In', submitted: 'Locked In ✓',
     global: 'Global', friends: 'Friends', yourSeason: 'Your Season',
     points: 'Points', hitRate: 'Hit Rate', dayStreak: 'Day Streak', globalRank: 'Global Rank',
@@ -19,6 +21,8 @@ export const I18N = {
   BG: {
     gwEye: 'КР', gwTitle: 'Кръг', deadline: 'Краен срок', seasonProg: 'Прогрес в сезона',
     gwClosed: 'КР ЗАТВОРЕН',
+    tabLive: 'LIVE', tabToday: 'ДНЕС', tabTomorrow: 'УТРЕ', tabLeagues: 'ЛИГИ',
+    noLive: 'Няма мачове на живо',
     todayFix: 'Мачове днес', submit: 'Заключи', submitted: 'Заключено ✓',
     global: 'Глобално', friends: 'Приятели', yourSeason: 'Твоят сезон',
     points: 'Точки', hitRate: 'Точност', dayStreak: 'Поредица', globalRank: 'Глобална позиция',
@@ -36,6 +40,8 @@ export const I18N = {
   ES: {
     gwEye: 'JO', gwTitle: 'Jornada', deadline: 'Límite', seasonProg: 'Progreso de temporada',
     gwClosed: 'JO CERRADA',
+    tabLive: 'LIVE', tabToday: 'HOY', tabTomorrow: 'MAÑANA', tabLeagues: 'LIGAS',
+    noLive: 'Sin partidos en vivo ahora',
     todayFix: 'Partidos de hoy', submit: 'Confirmar', submitted: 'Confirmado ✓',
     global: 'Global', friends: 'Amigos', yourSeason: 'Tu temporada',
     points: 'Puntos', hitRate: 'Aciertos', dayStreak: 'Racha', globalRank: 'Rango global',
@@ -53,6 +59,8 @@ export const I18N = {
   PT: {
     gwEye: 'RD', gwTitle: 'Rodada', deadline: 'Prazo', seasonProg: 'Progresso na temporada',
     gwClosed: 'RD ENCERRADA',
+    tabLive: 'LIVE', tabToday: 'HOJE', tabTomorrow: 'AMANHÃ', tabLeagues: 'LIGAS',
+    noLive: 'Nenhum jogo ao vivo agora',
     todayFix: 'Jogos de hoje', submit: 'Confirmar', submitted: 'Confirmado ✓',
     global: 'Global', friends: 'Amigos', yourSeason: 'Sua temporada',
     points: 'Pontos', hitRate: 'Taxa de acerto', dayStreak: 'Sequência', globalRank: 'Rank global',
@@ -70,6 +78,8 @@ export const I18N = {
   DE: {
     gwEye: 'ST', gwTitle: 'Spieltag', deadline: 'Frist', seasonProg: 'Saisonfortschritt',
     gwClosed: 'ST GESCHLOSSEN',
+    tabLive: 'LIVE', tabToday: 'HEUTE', tabTomorrow: 'MORGEN', tabLeagues: 'LIGEN',
+    noLive: 'Keine Live-Spiele gerade',
     todayFix: 'Heutige Spiele', submit: 'Bestätigen', submitted: 'Bestätigt ✓',
     global: 'Global', friends: 'Freunde', yourSeason: 'Deine Saison',
     points: 'Punkte', hitRate: 'Trefferquote', dayStreak: 'Streak', globalRank: 'Globaler Rang',
@@ -87,6 +97,8 @@ export const I18N = {
   FR: {
     gwEye: 'JO', gwTitle: 'Journée', deadline: 'Date limite', seasonProg: 'Progression de saison',
     gwClosed: 'JO FERMÉE',
+    tabLive: 'LIVE', tabToday: "AUJOURD'HUI", tabTomorrow: 'DEMAIN', tabLeagues: 'LIGUES',
+    noLive: 'Aucun match en direct',
     todayFix: "Matchs d'aujourd'hui", submit: 'Valider', submitted: 'Validé ✓',
     global: 'Global', friends: 'Amis', yourSeason: 'Votre saison',
     points: 'Points', hitRate: 'Taux de réussite', dayStreak: 'Série', globalRank: 'Rang mondial',
@@ -104,6 +116,8 @@ export const I18N = {
   TR: {
     gwEye: 'HF', gwTitle: 'Hafta', deadline: 'Son tarih', seasonProg: 'Sezon ilerlemesi',
     gwClosed: 'HF KAPANDI',
+    tabLive: 'LIVE', tabToday: 'BUGÜN', tabTomorrow: 'YARIN', tabLeagues: 'LİGLER',
+    noLive: 'Şu an canlı maç yok',
     todayFix: 'Bugünkü maçlar', submit: 'Kilitle', submitted: 'Kilitlendi ✓',
     global: 'Global', friends: 'Arkadaşlar', yourSeason: 'Sezonun',
     points: 'Puan', hitRate: 'İsabet oranı', dayStreak: 'Seri', globalRank: 'Global sıra',
@@ -121,6 +135,8 @@ export const I18N = {
   IT: {
     gwEye: 'GS', gwTitle: 'Giornata', deadline: 'Scadenza', seasonProg: 'Andamento stagione',
     gwClosed: 'GS CHIUSA',
+    tabLive: 'LIVE', tabToday: 'OGGI', tabTomorrow: 'DOMANI', tabLeagues: 'LEGHE',
+    noLive: 'Nessuna partita in diretta',
     todayFix: 'Partite oggi', submit: 'Conferma', submitted: 'Confermato ✓',
     global: 'Globale', friends: 'Amici', yourSeason: 'La tua stagione',
     points: 'Punti', hitRate: 'Precisione', dayStreak: 'Serie', globalRank: 'Classifica globale',
@@ -138,6 +154,8 @@ export const I18N = {
   RU: {
     gwEye: 'ТУР', gwTitle: 'Тур', deadline: 'Дедлайн', seasonProg: 'Прогресс сезона',
     gwClosed: 'ТУР ЗАКРЫТ',
+    tabLive: 'LIVE', tabToday: 'СЕГОДНЯ', tabTomorrow: 'ЗАВТРА', tabLeagues: 'ЛИГИ',
+    noLive: 'Нет матчей в прямом эфире',
     todayFix: 'Матчи сегодня', submit: 'Подтвердить', submitted: 'Сохранено ✓',
     global: 'Глобально', friends: 'Друзья', yourSeason: 'Твой сезон',
     points: 'Очки', hitRate: 'Точность', dayStreak: 'Серия', globalRank: 'Мировой рейтинг',
@@ -155,6 +173,8 @@ export const I18N = {
   PL: {
     gwEye: 'KOL', gwTitle: 'Kolejka', deadline: 'Termin', seasonProg: 'Postęp sezonu',
     gwClosed: 'KOLEJKA ZAMKNIĘTA',
+    tabLive: 'LIVE', tabToday: 'DZIŚ', tabTomorrow: 'JUTRO', tabLeagues: 'LIGI',
+    noLive: 'Brak meczów na żywo',
     todayFix: 'Mecze dzisiaj', submit: 'Zatwierdź', submitted: 'Zatwierdzone ✓',
     global: 'Globalne', friends: 'Znajomi', yourSeason: 'Twój sezon',
     points: 'Punkty', hitRate: 'Skuteczność', dayStreak: 'Seria', globalRank: 'Ranking globalny',
@@ -172,6 +192,8 @@ export const I18N = {
   ID: {
     gwEye: 'PK', gwTitle: 'Pekan', deadline: 'Batas waktu', seasonProg: 'Progres musim',
     gwClosed: 'PEKAN DITUTUP',
+    tabLive: 'LIVE', tabToday: 'HARI INI', tabTomorrow: 'BESOK', tabLeagues: 'LIGA',
+    noLive: 'Tidak ada pertandingan langsung',
     todayFix: 'Pertandingan hari ini', submit: 'Kunci', submitted: 'Terkunci ✓',
     global: 'Global', friends: 'Teman', yourSeason: 'Musimmu',
     points: 'Poin', hitRate: 'Akurasi', dayStreak: 'Streak', globalRank: 'Peringkat global',
