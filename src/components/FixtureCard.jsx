@@ -1,5 +1,7 @@
+import { getPickPts } from '../lib/difficulty'
+
 function TeamBadge({ name, short, color }) {
-  const bg = color ?? '#164134'
+  const bg   = color ?? '#164134'
   const abbr = short ?? (name ?? '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 3)
   return (
     <div style={{
@@ -17,7 +19,7 @@ function TeamBadge({ name, short, color }) {
 export default function FixtureCard({ fixture, selectedPick, isCaptain, onPick, onCaptain, lang }) {
   const PICKS = [
     { key: '1', label: fixture.home },
-    { key: 'X', label: 'Draw' },
+    { key: 'X', label: lang.draw ?? 'Draw' },
     { key: '2', label: fixture.away },
   ]
 
@@ -29,10 +31,10 @@ export default function FixtureCard({ fixture, selectedPick, isCaptain, onPick, 
       padding: '14px 14px 12px',
       margin: '0 16px 10px',
     }}>
-      {/* Top row: league + captain */}
+      {/* Top row: league label + captain */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 13 }}>
         <span style={{ fontSize: 11, color: '#8FA99B', fontWeight: 500, letterSpacing: 0.3 }}>
-          {fixture.league ?? 'Premier League'}
+          {fixture.league ?? 'League'}
         </span>
         <button
           onClick={() => onCaptain(fixture.id)}
@@ -50,7 +52,7 @@ export default function FixtureCard({ fixture, selectedPick, isCaptain, onPick, 
             transition: 'all 0.15s',
           }}
         >
-          © 2× {lang.cap ?? 'Captain'}
+          2× {lang.cap ?? 'Captain'}
         </button>
       </div>
 
@@ -58,17 +60,13 @@ export default function FixtureCard({ fixture, selectedPick, isCaptain, onPick, 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 13, padding: '0 4px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9, flex: 1 }}>
           <TeamBadge name={fixture.home} short={fixture.home_short} color={fixture.home_color} />
-          <span style={{ fontFamily: 'Oswald', fontSize: 15, fontWeight: 600 }}>
-            {fixture.home}
-          </span>
+          <span style={{ fontFamily: 'Oswald', fontSize: 15, fontWeight: 600 }}>{fixture.home}</span>
         </div>
         <span style={{ fontFamily: 'Oswald', fontSize: 13, fontWeight: 500, color: '#8FA99B', padding: '0 10px', flexShrink: 0 }}>
           VS
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9, flex: 1, justifyContent: 'flex-end' }}>
-          <span style={{ fontFamily: 'Oswald', fontSize: 15, fontWeight: 600 }}>
-            {fixture.away}
-          </span>
+          <span style={{ fontFamily: 'Oswald', fontSize: 15, fontWeight: 600 }}>{fixture.away}</span>
           <TeamBadge name={fixture.away} short={fixture.away_short} color={fixture.away_color} />
         </div>
       </div>
@@ -77,6 +75,9 @@ export default function FixtureCard({ fixture, selectedPick, isCaptain, onPick, 
       <div style={{ display: 'flex', gap: 7 }}>
         {PICKS.map(p => {
           const active = selectedPick === p.key
+          const { pts, label } = getPickPts(p.key, fixture.home_pos ?? null, fixture.away_pos ?? null)
+          const isUpset = label !== null
+
           return (
             <button
               key={p.key}
@@ -89,28 +90,33 @@ export default function FixtureCard({ fixture, selectedPick, isCaptain, onPick, 
                 background: active ? '#5EEAD4' : 'rgba(255,255,255,.035)',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
               }}
             >
               <span style={{
                 fontFamily: 'Oswald', fontWeight: 700, fontSize: 17,
-                color: active ? '#05110D' : '#EAF2EC',
-                lineHeight: 1,
+                color: active ? '#05110D' : '#EAF2EC', lineHeight: 1,
               }}>
                 {p.key}
               </span>
               <span style={{
                 fontSize: 10,
                 color: active ? '#05110D' : '#8FA99B',
-                fontWeight: 500,
-                lineHeight: 1,
-                maxWidth: '100%',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
+                fontWeight: 500, lineHeight: 1,
+                maxWidth: '100%', overflow: 'hidden',
+                textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 padding: '0 4px',
               }}>
                 {p.label}
+              </span>
+              {/* Potential points — analogue to odds, but just points */}
+              <span style={{
+                fontSize: 9, lineHeight: 1, fontFamily: 'Oswald', fontWeight: 600,
+                color: active
+                  ? '#05110D'
+                  : isUpset ? 'var(--gold)' : 'rgba(234,242,236,.35)',
+              }}>
+                {pts} pt{isUpset ? ` ${label}` : ''}
               </span>
             </button>
           )

@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { showRewardedVideo } from '../lib/ads'
+
 const FEATURES = [
   { emoji: '⚡', t: 'f1t', s: 'f1s' },
   { emoji: '©️', t: 'f2t', s: 'f2s' },
@@ -6,6 +9,14 @@ const FEATURES = [
 ]
 
 export default function PassScreen({ lang, subscribed, onSubscribe }) {
+  const [rewardState, setRewardState] = useState('idle') // idle | loading | done
+
+  async function handleRewardedVideo() {
+    setRewardState('loading')
+    const { earned } = await showRewardedVideo()
+    setRewardState(earned ? 'done' : 'idle')
+  }
+
   return (
     <div style={{ padding: '16px 16px 80px' }}>
       <div style={{
@@ -58,8 +69,46 @@ export default function PassScreen({ lang, subscribed, onSubscribe }) {
         {subscribed ? lang.subscribed : lang.subscribe}
       </button>
 
-      <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--chalk-dim)' }}>
+      <div style={{ textAlign: 'center', fontSize: 12, color: 'var(--chalk-dim)', marginBottom: 20 }}>
         {lang.honest}
+      </div>
+
+      {/* Rewarded video — purely optional, cosmetic reward, game is always fully playable without it */}
+      <div style={{
+        border: '1px solid var(--line)',
+        borderRadius: 14,
+        padding: '14px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 12,
+      }}>
+        <div>
+          <div style={{ fontWeight: 600, fontSize: 13 }}>{lang.watchAdTitle ?? 'Support PitchCall'}</div>
+          <div style={{ fontSize: 11, color: 'var(--chalk-dim)', marginTop: 2 }}>
+            {lang.watchAdSub ?? 'Watch a short video — unlock a dark theme preview'}
+          </div>
+        </div>
+        <button
+          onClick={handleRewardedVideo}
+          disabled={rewardState !== 'idle'}
+          style={{
+            flexShrink: 0,
+            padding: '8px 14px',
+            background: rewardState === 'done' ? 'var(--mint)' : 'rgba(255,255,255,.07)',
+            border: '1px solid var(--line)',
+            borderRadius: 10,
+            color: rewardState === 'done' ? '#05110D' : 'var(--chalk)',
+            fontFamily: 'Oswald',
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: rewardState === 'idle' ? 'pointer' : 'default',
+            letterSpacing: 0.5,
+            transition: 'all 0.2s',
+          }}
+        >
+          {rewardState === 'loading' ? '...' : rewardState === 'done' ? '✓' : 'WATCH'}
+        </button>
       </div>
     </div>
   )

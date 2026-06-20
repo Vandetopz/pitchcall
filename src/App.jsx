@@ -12,51 +12,49 @@ import PredictScreen from './components/PredictScreen'
 import LeaderboardScreen from './components/LeaderboardScreen'
 import SeasonScreen from './components/SeasonScreen'
 import PassScreen from './components/PassScreen'
+import AdBanner from './components/AdBanner'
 import BottomNav from './components/BottomNav'
+import { showInterstitialOnce } from './lib/ads'
 import './index.css'
 
 export default function App() {
-  const [screen, setScreen]               = useState('predict')
-  const [lang, setLang]                   = useState(() => {
+  const [screen, setScreen]                 = useState('predict')
+  const [lang, setLang]                     = useState(() => {
     const tgCode = window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code?.toUpperCase()
     const SUPPORTED = ['EN', 'BG', 'ES', 'PT', 'DE', 'FR', 'TR', 'IT', 'RU', 'PL', 'ID']
     return SUPPORTED.includes(tgCode) ? tgCode : 'EN'
   })
   const [selectedLeague, setSelectedLeague] = useState(null)
-  const [captain, setCaptain]             = useState(null)
-  const [submitted, setSubmitted]         = useState(false)
-  const [subscribed, setSubscribed]       = useState(false)
-  const [langOpen, setLangOpen]           = useState(false)
-  const [toast, setToast]                 = useState(null)
+  const [captain, setCaptain]               = useState(null)
+  const [submitted, setSubmitted]           = useState(false)
+  const [subscribed, setSubscribed]         = useState(false)
+  const [langOpen, setLangOpen]             = useState(false)
+  const [toast, setToast]                   = useState(null)
 
   const t = I18N[lang]
 
-  const { user, profile, loading: userLoading }                          = useUser()
-  const { fixtures, allLeagues }                                         = useFixtures(selectedLeague)
-  const { liveFixtures, feedFixtures }                                   = useFixturesFeed()
-  const { predictions, savePrediction, saveCaptain, loading: predsLoading } = usePredictions(profile?.id)
-  const { leaderboard }                                                  = useLeaderboard()
-  const { streak }                                                       = useStreak(profile?.id)
+  const { user, profile, loading: userLoading }                              = useUser()
+  const { fixtures, allLeagues }                                             = useFixtures(selectedLeague)
+  const { liveFixtures, feedFixtures }                                       = useFixturesFeed()
+  const { predictions, savePrediction, saveCaptain, loading: predsLoading }  = usePredictions(profile?.id)
+  const { leaderboard }                                                      = useLeaderboard()
+  const { streak }                                                           = useStreak(profile?.id)
 
   const picksMap  = Object.fromEntries(predictions.map(p => [p.fixture_id, p.pick]))
   const allPicked = fixtures.length > 0 && fixtures.every(f => picksMap[f.id])
 
-  // Auto-select league with nearest upcoming match
   useEffect(() => {
     if (!selectedLeague && allLeagues.length > 0) setSelectedLeague(allLeagues[0])
   }, [allLeagues, selectedLeague])
 
-  // Reset lock state when switching leagues
   useEffect(() => { setSubmitted(false) }, [selectedLeague])
 
-  // Restore captain from DB on first predictions load
   useEffect(() => {
     if (predsLoading) return
     const cap = predictions.find(p => p.is_captain)
     if (cap) setCaptain(cap.fixture_id)
   }, [predsLoading]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-lock if all picks already in DB (page reload case)
   useEffect(() => { if (allPicked) setSubmitted(true) }, [allPicked])
 
   function showToast(msg) {
@@ -77,11 +75,16 @@ export default function App() {
   function handleSubmit() {
     setSubmitted(true)
     showToast(t.toastSub)
+    // Non-intrusive interstitial: once per round, after the user locks in
+    const gw = fixtures[0]?.gameweek
+    if (selectedLeague && gw) {
+      showInterstitialOnce(selectedLeague, gw)
+    }
   }
 
   function handleLeagueChange(league) {
     setSelectedLeague(league)
-    setCaptain(null) // visual reset; DB state is preserved
+    setCaptain(null)
   }
 
   if (userLoading) {
@@ -136,6 +139,7 @@ export default function App() {
       <main key={screen} style={{ animation: 'fadeIn 0.2s ease' }}>
         {screens[screen]}
       </main>
+      <AdBanner />
       <BottomNav current={screen} onChange={setScreen} lang={t} />
       {toast && (
         <div style={{
